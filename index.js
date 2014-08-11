@@ -22,6 +22,7 @@ module.exports = function(opt) {
     'use strict';
     if (!opt) opt = {};
     if (!opt.templateDirectory) opt.templateDirectory = __dirname + '/node_modules/kss/lib/template';
+    if (!opt.markupDirectory) opt.markupDirectory = null;
     if (!opt.kssOpts) opt.kssOpts = {};
 
     var buffer = [];
@@ -66,7 +67,7 @@ module.exports = function(opt) {
             sectionRoots.sort();
             rootCount = sectionRoots.length;
 
-            handlebarHelpers(handlebars, styleguide);
+            handlebarHelpers(handlebars, styleguide, opt.markupDirectory);
 
             // Now, group all of the sections by their root
             // reference, and make a page for each.

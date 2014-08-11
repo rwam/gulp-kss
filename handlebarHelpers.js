@@ -1,6 +1,7 @@
-var kss = require('kss')
+var kss = require('kss'),
+    fs = require('fs');
 
-module.exports = function (handlebars, styleguide) {
+module.exports = function (handlebars, styleguide, markupDirectory) {
     /**
      * Equivalent to the {#if} block helper with multiple arguments.
      */
@@ -125,6 +126,8 @@ module.exports = function (handlebars, styleguide) {
             return false;
         }
 
+        modifier.markup = getMarkup(modifier.markup);
+
         // Maybe it's actually a section?
         if (modifier.modifiers) {
             return new handlebars.SafeString(
@@ -136,6 +139,38 @@ module.exports = function (handlebars, styleguide) {
         return new handlebars.SafeString(
             new kss.KssModifier(modifier).markup()
         );
+    });
+
+    /**
+     * Use Markup from a given template file. To detect any template files use
+     * the following convention in your markup section:
+     *
+     * @example
+     * // Markup:
+     * // includeTemplate path/to/your/file.html
+     *
+     * @param {String} markup the markup to check against the pattern
+     */
+    function getMarkup(markup) {
+        var data = '',
+            file,
+            pattern = /includeTemplate\s(.*\.html)/;
+
+        if (markupDirectory && pattern.exec(markup)) {
+            file = process.cwd() + '/' + markupDirectory + '/' + RegExp.$1;
+            try {
+                data = fs.readFileSync(file, 'utf8');
+            } catch(err) {
+                console.log(err.message);
+            }
+            return data;
+        } else {
+            return markup;
+        }
+    }
+
+    handlebars.registerHelper('templatedMarkup', function(markup) {
+        return getMarkup(markup);
     });
 
     /**
