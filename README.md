@@ -37,10 +37,36 @@ gulp.src('styles/main.less')
     .pipe(gulp.dest('styleguide/'));
 ```
 
+## Markup-Templates
+
+If you like to use template files for the markup section, then you can use single files in a markup directory. In your KSS comments use the following declaration to include the markup file:
+
+```
+//
+// Markup:
+// includeTemplate path/to/your/file.html
+//
+```
+And in your `gulpfile.js` you set the **markupDirectory**:
+
+```
+…
+gulp.src(options.src.styleguide.kss)
+    .pipe(kss({
+         markupDirectory : 'src/templates',
+         overview: __dirname + 'src/styleguide/overview.md'
+         templateDirectory : 'src/styleguide/template'
+    }))
+    .pipe(gulp.dest(options.target.styleguide.build));
+…
+
+```
+
 ## Options
 
 * `overview`: Absolute path to markdown file which is used for styleguide home page
-* `templateDirectory`: Absolute path to template directory, by default `kss-node` default template is used.
+* `markupDirectory`: path to the markup directory, by default no template files are used.
+* `templateDirectory`: path to template directory, by default `kss-node` default template is used.
 * `kss`: Options supported by [`kss-node`](https://github.com/hughsk/kss-node/wiki/Module-API#wiki-options)
 
 ## LICENSE
