@@ -61,6 +61,9 @@ gulp.src(options.src.styleguide.kss)
 …
 
 ```
+### Template
+
+To use the possibility of markup files, you must use the template of this repository, because there are modified handlebar helpers.
 
 ## Options
 
